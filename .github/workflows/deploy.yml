@@ -2,22 +2,32 @@ name: Deploy Flask App to EC2
 
 on:
   push:
-    branches: [ main ]  # Runs when code is pushed to the main branch
+    branches: [ main ]  # Triggers when you push to main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Copy Files to EC2 via SCP
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          source: "."
-          target: "/home/ubuntu/flask-app"
+    - name: Copy Files to EC2 via SCP
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        source: "."  # You can also try "*" if "." doesn't work
+        target: "/home/ubuntu/flask-app"
+
+    - name: Restart Flask App via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          cd /home/ubuntu/flask-app
+          sudo systemctl restart flaskapp
 
