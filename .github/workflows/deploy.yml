@@ -1,4 +1,4 @@
-name: Deploy Flask App to EC2
+name: Deploy Flask to EC2
 
 on:
   push:
@@ -31,4 +31,3 @@ jobs:
           cd /home/ubuntu/flask-app
           sudo systemctl restart flaskapp
 
-#Arjun
