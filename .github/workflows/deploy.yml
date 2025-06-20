@@ -30,4 +30,10 @@ jobs:
           script: |
             cd /home/ubuntu/flask-app
             sudo systemctl restart flaskapp
-X
+
+      - name: ✅ Notify Slack
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"✅ Flask app deployed successfully to EC2! 🎉"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
